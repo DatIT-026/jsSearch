@@ -3,20 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cổng thông tin - Trường Sĩ Quan Tăng Thiết Giáp</title>
     <link rel="stylesheet" href="style.css">
-    <title>Tìm Kiếm Học Viên</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,700;1,400&family=Times+New+Roman&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="container">
-        <h1>🔍 Tìm Kiếm Thông Tin Học Viên</h1>
-        
-        <div class="search-box">
-            <input type="text" id="searchInput" placeholder="Nhập tên học viên cần tìm..." />
-            <button id="searchBtn">Tìm kiếm</button>
+
+    <header class="site-header">
+        <div class="header-content">
+            <div class="logo-box">
+                <img src="img/logo_1.png" alt="logo_1" class="header-logo">
+                <img src="img/logo_2.png" alt="logo_2" class="header-logo">
+            </div>
+
+            <div class="header-text">
+                <div class="top-line">CỔNG THÔNG TIN ĐIỆN TỬ</div>
+                <h1 class="school-name">TRƯỜNG SĨ QUAN TĂNG THIẾT GIÁP</h1>
+                <div class="address">Km6 - Tam Dương - Phú Thọ</div>
+                <div class="slogan">"Chất lượng đào tạo của Nhà trường là khả năng sẵn sàng chiến đấu của đơn vị"</div>
+            </div>
+
+            <div class="logo-box">
+                <img src="img/logo_3.png" alt="logo_3" class="header-logo">
+                <img src="img/logo_4.png" alt="logo_4" class="header-logo">
+            </div>
+        </div>
+    </header>
+
+    <nav class="main-nav">
+        <ul class="nav-list">
+            <li><a href="#" class="active">Trang chủ</a></li>
+            <li><a href="#">Thủ trưởng, BGH</a></li>
+            <li><a href="#">Cơ quan</a></li>
+            <li><a href="#">Khối giáo viên</a></li>
+            <li><a href="#">Tiểu đoàn</a></li>
+        </ul>
+    </nav>
+
+    <main class="container">
+        <div class="search-section">
+            <h2 class="section-title">TRA CỨU THÔNG TIN HỌC VIÊN</h2>
+            
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Nhập họ tên học viên cần tìm..." autocomplete="off"/>
+                <button id="searchBtn">
+                    Tìm kiếm
+                </button>
+            </div>
         </div>
 
-        <div id="resultContainer" class="result-container"></div>
-    </div>
+        <div id="resultContainer" class="result-container">
+            <div class="empty-state">
+                Vui lòng nhập tên để tra cứu dữ liệu
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 FireHelper Team. All Rights Reserved.</p>
+    </footer>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <script src="./script.js"></script>
