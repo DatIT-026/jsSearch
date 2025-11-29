@@ -5,7 +5,7 @@ let gpaList = [];
 // load data
 document.addEventListener('DOMContentLoaded', () => {
     // load students
-    fetch('data.csv')
+    fetch('data/data.csv')
         .then(res => res.ok ? res.text() : Promise.reject('Không tìm thấy data.csv'))
         .then(text => Papa.parse(text, {
             header: true, skipEmptyLines: true,
@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
         .catch(err => console.error(err));
 
     // load courses
-    fetch('courses.csv')
+    fetch('data/courses.csv')
         .then(res => res.ok ? res.text() : Promise.reject('Không tìm thấy course.csv'))
         .then(text => Papa.parse(text, {
             header: true, skipEmptyLines: true,
@@ -52,6 +52,9 @@ function goHome() {
     const resultContainer = document.getElementById('searchResultContainer');
     if (resultContainer) resultContainer.innerHTML = '';
     setActiveNav('nav-home');
+    
+    // Close menu with delay to allow smooth transition
+    setTimeout(() => closeMenu(), 150);
 }
 
 function showBattalion(id) {
@@ -64,18 +67,27 @@ function showBattalion(id) {
         return;
     }
     setActiveNav('nav-battalion');
+    
+    // Close menu with delay to allow smooth transition
+    setTimeout(() => closeMenu(), 150);
 }
 
 function showCompanyList(id) {
     hideAllViews();
     document.getElementById('company-list-view').style.display = 'block';
     if (id === 'c4') renderTable(studentsData, 'tableContainer', 'total-count');
+    
+    // Close menu with delay to allow smooth transition
+    setTimeout(() => closeMenu(), 150);
 }
 
 function showGradeView() {
     hideAllViews();
     document.getElementById('grade-view').style.display = 'block';
     setActiveNav('nav-grade');
+    
+    // Close menu with delay to allow smooth transition
+    setTimeout(() => closeMenu(), 150);
 }
 
 // render data table
@@ -274,7 +286,7 @@ function renderGPATable() {
                 <td class="text-center" style="color:#014282; font-weight:500">${item.code || '-'}</td> 
                 <td class="text-center">${item.credit}</td>
                 <td class="text-center">${item.score}</td>
-                <td class="text-center" style="cursor:pointer;color:red;font-weight:bold" onclick="removeGpa(${idx})" title="Xóa">❌</td>
+                <td class="text-center" style="cursor:pointer;color:red;font-weight:bold" onclick="removeGpa(${idx})" title="Xóa">✖</td>
             </tr>
         `;
     });
@@ -317,4 +329,16 @@ function calcGPA() {
     if (gpa >= 8.0) gpaSpan.style.color = '#2e7d32';
     else if (gpa >= 5.0) gpaSpan.style.color = '#ff9800';
     else gpaSpan.style.color = '#b71c1c';
+}
+
+// mobile menu function
+
+function toggleMenu() {
+    const navMenu = document.getElementById('navMenu');
+    navMenu.classList.toggle('active');
+}
+
+function closeMenu() {
+    const navMenu = document.getElementById('navMenu');
+    navMenu.classList.remove('active');
 }

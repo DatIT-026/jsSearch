@@ -35,26 +35,53 @@
     </header>
 
     <nav class="main-nav">
-    <ul class="nav-list">
-        <li><a href="#" id="nav-home" class="active" onclick="goHome()">Trang chủ</a></li>
-        
-        <li><a href="#">Thủ trưởng, BGH</a></li>
-        <li><a href="#">Cơ quan</a></li>
-        <li><a href="#">Khối giáo viên</a></li>
+        <div class="menu-toggle" onclick="toggleMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
 
-        <li class="dropdown">
-            <a href="#" id="nav-battalion">Tiểu đoàn ▼</a>
-            <ul class="dropdown-content">
-                <li><a href="#" onclick="showBattalion('d1')">Tiểu đoàn 1</a></li>
-                <li><a href="#" onclick="showBattalion('d2')">Tiểu đoàn 2</a></li>
-                <li><a href="#" onclick="showBattalion('d61')">Tiểu đoàn 61</a></li>
-                <li><a href="#" onclick="showBattalion('d7')">Tiểu đoàn 7</a></li>
-            </ul>
-        </li>
+        <ul class="nav-list" id="navMenu">
+            <li><a href="#" id="nav-home" class="active" onclick="goHome()">Trang chủ</a></li>
+            <li><a href="#">Thủ trưởng, BGH</a></li>
+            <li><a href="#">Cơ quan</a></li>
+            <li><a href="#">Khối giáo viên</a></li>
 
-        <li><a href="#" id="nav-grade" onclick="showGradeView()">Tính Điểm</a></li>
-    </ul>
-</nav>
+            <li class="dropdown">
+                <a href="#" id="nav-battalion" class="dropdown-toggle" onclick="dropDown()">
+                    Tiểu đoàn
+                    <span class="dropdown-arrow">▼</span>
+                </a>
+                <ul class="dropdown-content">
+                    <li><a href="#" onclick="showBattalion('d1')">Tiểu đoàn 1</a></li>
+                    <li><a href="#" onclick="showBattalion('d2')">Tiểu đoàn 2</a></li>
+                    <li><a href="#" onclick="showBattalion('d61')">Tiểu đoàn 61</a></li>
+                    <li><a href="#" onclick="showBattalion('d7')">Tiểu đoàn 7</a></li>
+                </ul>
+            </li>
+
+            <li><a href="#" id="nav-grade" onclick="showGradeView()">Tính Điểm</a></li>
+        </ul>
+    </nav>
+
+    <script>
+        function dropDown() {
+            document.getElementById("myDropdown").classList.toggle("show");
+        }
+
+        window.onclick = function (event) {
+            if (!event.target.matches('.dropbtn')) {
+                let dropdowns = document.getElementsByClassName("dropdown-content");
+                let i;
+                for (i = 0; i < dropdowns.length; i++) {
+                    let openDropdown = dropdowns[i];
+                    if (openDropdown.classList.contains('show')) {
+                        openDropdown.classList.remove('show');
+                    }
+                }
+            }
+        }
+    </script>
 
     <main class="main-container">
 
@@ -72,21 +99,21 @@
 
         <div id="battalion-view" class="view-section" style="display: none;">
             <div class="nav-actions">
-                <button onclick="goHome()" class="btn-back">❮ Về Trang chủ</button>
+                <button onclick="goHome()" class="btn-back">← Về Trang chủ</button>
             </div>
             <h2 class="view-title">TIỂU ĐOÀN 1 - DANH SÁCH ĐƠN VỊ</h2>
             <div class="unit-grid">
                 <div class="unit-card disabled">
-                    <h3>ĐẠI ĐỘI 1</h3><small>(Chưa có dữ liệu)</small>
+                    <h3>Đại Đội 1</h3><small>(Chưa có dữ liệu)</small>
                 </div>
                 <div class="unit-card disabled">
-                    <h3>ĐẠI ĐỘI 2</h3><small>(Chưa có dữ liệu)</small>
+                    <h3>Đại Đội 2</h3><small>(Chưa có dữ liệu)</small>
                 </div>
                 <div class="unit-card disabled">
-                    <h3>ĐẠI ĐỘI 3</h3><small>(Chưa có dữ liệu)</small>
+                    <h3>Đại Đội 3</h3><small>(Chưa có dữ liệu)</small>
                 </div>
                 <div class="unit-card active" onclick="showCompanyList('c4')">
-                    <h3>ĐẠI ĐỘI 4</h3>
+                    <h3>Đại Đội 4</h3>
                     <p>Xem quân số</p>
                 </div>
             </div>
@@ -94,16 +121,16 @@
 
         <div id="company-list-view" class="view-section" style="display: none;">
             <div class="nav-actions">
-                <button onclick="showBattalion('d1')" class="btn-back">❮ Về Tiểu đoàn</button>
+                <button onclick="showBattalion('d1')" class="btn-back">← Về Tiểu đoàn</button>
                 <div class="record-count" id="total-count">Tổng: 0</div>
             </div>
-            <h2 class="view-title text-left">DANH SÁCH QUÂN SỐ - ĐẠI ĐỘI 4</h2>
+            <h2 class="view-title text-left">DANH SÁCH QUÂN SỐ - Đại Đội 4</h2>
             <div id="tableContainer" class="table-responsive"></div>
         </div>
 
         <div id="grade-view" class="view-section" style="display: none;">
             <div class="nav-actions">
-                <button onclick="goHome()" class="btn-back">❮ Về Trang chủ</button>
+                <button onclick="goHome()" class="btn-back">← Về Trang chủ</button>
             </div>
             <h2 class="view-title">CÔNG CỤ TÍNH ĐIỂM HỌC TẬP</h2>
 
