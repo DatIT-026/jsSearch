@@ -46,6 +46,7 @@
             <li><a href="#">Thủ trưởng, BGH</a></li>
             <li><a href="#">Cơ quan</a></li>
             <li><a href="#">Khối giáo viên</a></li>
+            <li><a href="#" id="nav-grade" onclick="showGradeView(event)">Tính Điểm</a></li>
 
             <li class="dropdown">
                 <a href="#" id="nav-battalion" class="dropdown-toggle" onclick="dropDown()">
@@ -59,8 +60,6 @@
                     <li><a href="#" onclick="showBattalion('d7')">Tiểu đoàn 7</a></li>
                 </ul>
             </li>
-
-            <li><a href="#" id="nav-grade" onclick="showGradeView()">Tính Điểm</a></li>
         </ul>
     </nav>
 
@@ -70,16 +69,17 @@
         }
 
         window.onclick = function (event) {
-            if (!event.target.matches('.dropbtn')) {
-                let dropdowns = document.getElementsByClassName("dropdown-content");
-                let i;
-                for (i = 0; i < dropdowns.length; i++) {
-                    let openDropdown = dropdowns[i];
-                    if (openDropdown.classList.contains('show')) {
-                        openDropdown.classList.remove('show');
-                    }
-                }
+            if (event.target.closest('.dropdown-toggle') || event.target.matches('.dropbtn')) {
+                return;
             }
+
+            if (event.target.closest('.nav-list a')) {
+                return;
+            }
+
+            document.querySelectorAll('.dropdown').forEach(d => {
+                d.classList.remove('active');
+            });
         }
     </script>
 

@@ -81,13 +81,21 @@ function showCompanyList(id) {
     setTimeout(() => closeMenu(), 150);
 }
 
-function showGradeView() {
+function showGradeView(event) {
+    if (event) {
+        event.stopPropagation();
+        event.preventDefault();
+    }
+
     hideAllViews();
     document.getElementById('grade-view').style.display = 'block';
     setActiveNav('nav-grade');
-    
-    // Close menu with delay to allow smooth transition
-    setTimeout(() => closeMenu(), 150);
+
+    document.querySelectorAll('.dropdown').forEach(d => {
+        d.classList.remove('active');
+    });
+
+    closeMenu();
 }
 
 // render data table
@@ -336,9 +344,19 @@ function calcGPA() {
 function toggleMenu() {
     const navMenu = document.getElementById('navMenu');
     navMenu.classList.toggle('active');
+
+    const mainContainer = document.querySelector('.main-container');
+    if (navMenu.classList.contains('active')) {
+        if (mainContainer) mainContainer.style.pointerEvents = 'none';
+    } else {
+        if (mainContainer) mainContainer.style.pointerEvents = 'auto';
+    }
 }
 
 function closeMenu() {
     const navMenu = document.getElementById('navMenu');
     navMenu.classList.remove('active');
+
+    const mainContainer = document.querySelector('.main-container');
+    if (mainContainer) mainContainer.style.pointerEvents = 'auto';
 }
