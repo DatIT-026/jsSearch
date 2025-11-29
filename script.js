@@ -37,9 +37,9 @@ function hideAllViews() {
 // focus menu
 function setActiveNav(selectedId) {
     const links = document.querySelectorAll('.nav-list > li > a');
-    
+
     links.forEach(link => link.classList.remove('active'));
-    
+
     const activeLink = document.getElementById(selectedId);
     if (activeLink) {
         activeLink.classList.add('active');
@@ -129,10 +129,10 @@ if (searchBtn) {
     searchBtn.addEventListener('click', () => {
         const input = document.getElementById('searchInput');
         const key = input ? input.value.trim().toLowerCase() : '';
-        
-        if (!key) { 
-            alert("Vui lòng nhập tên cần tìm!"); 
-            return; 
+
+        if (!key) {
+            alert("Vui lòng nhập tên cần tìm!");
+            return;
         }
 
         const results = studentsData.filter(s =>
@@ -196,22 +196,30 @@ function calcSubjectScore() {
     const kq = (s10 * 0.1) + (s20 * 0.2) + (s70 * 0.7);
 
     document.getElementById('subjectResult').style.display = 'block';
-    
+
     const resultSpan = document.getElementById('finalScore');
     resultSpan.innerText = kq.toFixed(2);
-    resultSpan.style.color = kq < 5 ? 'red' : '#2e7d32';
+    if (kq >= 8) resultSpan.style.color = '#2e7d32';
+    else if (kq >= 5 && kq < 8) resultSpan.style.color = '#ff9800';
+    else {
+        resultSpan.style.color = 'red';
+    }
 }
 
 // gpa
 function initCourseSelect() {
     const sel = document.getElementById('courseSelect');
-    if(!sel) return;
-    
+    if (!sel) return;
+
     coursesData.forEach(c => {
         if (c['Môn học']) {
             const opt = document.createElement('option');
-            opt.value = `${c['Môn học']}|${c['Số tín chỉ']}`;
-            opt.text = `${c['Môn học']} (${c['Số tín chỉ']} tín)`;
+            const code = c['Mã môn'] || '';
+            opt.value = `${c['Môn học']}|${c['Số tín chỉ']}|${code}`;
+
+            const displayCode = code ? ` [${code}]` : '';
+            opt.text = `${displayCode} ${c['Môn học']} (${c['Số tín chỉ']} tín)`;
+            
             sel.appendChild(opt);
         }
     });
@@ -224,17 +232,17 @@ function addToGPATable() {
     const val = select.value;
     const scoreVal = scoreInput.value;
 
-    if (!val) { 
-        alert("Vui lòng chọn một môn học!"); 
-        select.focus(); return; 
+    if (!val) {
+        alert("Vui lòng chọn một môn học!");
+        select.focus(); return;
     }
 
-    if (!isValidScore(scoreVal)) { 
-        alert("Điểm không hợp lệ! Vui lòng kiểm tra lại."); 
-        scoreInput.focus(); return; 
+    if (!isValidScore(scoreVal)) {
+        alert("Điểm không hợp lệ! Vui lòng kiểm tra lại.");
+        scoreInput.focus(); return;
     }
 
-    const [name, cred] = val.split('|');
+    const [name, cred, code] = val.split('|');
     const credit = parseInt(cred);
     const score = parseFloat(scoreVal);
 
@@ -242,48 +250,38 @@ function addToGPATable() {
     const index = gpaList.findIndex(item => item.name === name);
 
     if (index !== -1) {
-        // if it is
-        if (gpaList[index].score === score) {
-            // if the score is equal to user's input course => no change
-        } else {
-            // if not => update new score
-            gpaList[index].score = score;
-            alert(`Đã cập nhật điểm mới (${score}) cho môn: ${name}`);
-        }
-    } else {
-        // not available? => add to the list
-        gpaList.push({ name: name, credit: credit, score: score });
-    }
+        if (gpaList[index].score !== score) gpaList[index].score = score;
+    } else gpaList.push({ name: name, credit: credit, score: score, code: code });
 
     // re-render table & reset form
     renderGPATable();
-    
-    select.value = '';
+
+    // select.value = '';
     scoreInput.value = '';
+    scoreInput.focus();
 }
 
 function renderGPATable() {
     const tbody = document.getElementById('gpaListBody');
     tbody.innerHTML = '';
     
-    if(gpaList.length === 0) {
-        return;
-    }
+    if(gpaList.length === 0) return;
 
     gpaList.forEach((item, idx) => {
         tbody.innerHTML += `
             <tr>
                 <td>${item.name}</td>
+                <td class="text-center" style="color:#014282; font-weight:500">${item.code || '-'}</td> 
                 <td class="text-center">${item.credit}</td>
                 <td class="text-center">${item.score}</td>
-                <td class="text-center" style="cursor:pointer;color:red;font-weight:bold" onclick="removeGpa(${idx})" title="Xóa môn này">❌</td>
+                <td class="text-center" style="cursor:pointer;color:red;font-weight:bold" onclick="removeGpa(${idx})" title="Xóa">❌</td>
             </tr>
         `;
     });
 }
 
 function removeGpa(idx) {
-    if(confirm("Bạn có chắc muốn xóa môn học này?")) {
+    if (confirm("Bạn có chắc muốn xóa môn học này?")) {
         gpaList.splice(idx, 1);
         renderGPATable();
         // an kq cu neu thay doi list
@@ -292,15 +290,15 @@ function removeGpa(idx) {
 }
 
 function calcGPA() {
-    if (gpaList.length === 0) { 
-        alert("Danh sách môn học đang trống! Vui lòng thêm môn học."); 
-        return; 
+    if (gpaList.length === 0) {
+        alert("Danh sách môn học đang trống! Vui lòng thêm môn học.");
+        return;
     }
 
     let totalS = 0, totalC = 0;
-    gpaList.forEach(i => { 
-        totalS += i.score * i.credit; 
-        totalC += i.credit; 
+    gpaList.forEach(i => {
+        totalS += i.score * i.credit;
+        totalC += i.credit;
     });
 
     // Validate chia cho 0
@@ -312,12 +310,11 @@ function calcGPA() {
     const gpa = totalS / totalC;
 
     document.getElementById('gpaResult').style.display = 'block';
-    
+
     const gpaSpan = document.getElementById('gpaValue');
     gpaSpan.innerText = gpa.toFixed(2);
 
-    if (gpa >= 8.0) gpaSpan.style.color = '#2e7d32'; // Giỏi
-    else if (gpa >= 7.0) gpaSpan.style.color = '#014282'; // Khá
-    else if (gpa >= 5.0) gpaSpan.style.color = '#ff9800'; // TB
-    else gpaSpan.style.color = '#b71c1c'; // Yếu
+    if (gpa >= 8.0) gpaSpan.style.color = '#2e7d32';
+    else if (gpa >= 5.0) gpaSpan.style.color = '#ff9800';
+    else gpaSpan.style.color = '#b71c1c';
 }
