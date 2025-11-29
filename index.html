@@ -1,19 +1,23 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cổng thông tin - Trường Sĩ Quan Tăng Thiết Giáp</title>
+    <title>Cổng thông tin Đào tạo - Tăng Thiết Giáp</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,700;1,400&family=Times+New+Roman&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Times+New+Roman:wght@700&display=swap"
+        rel="stylesheet">
 </head>
+
 <body>
 
     <header class="site-header">
         <div class="header-content">
             <div class="logo-box">
-                <img src="img/logo_1.png" alt="logo_1" class="header-logo">
-                <img src="img/logo_2.png" alt="logo_2" class="header-logo">
+                <img src="img/logo_1.png" alt="Logo 1" class="header-logo" onerror="this.style.display='none'">
+                <img src="img/logo_2.png" alt="Logo 2" class="header-logo" onerror="this.style.display='none'">
             </div>
 
             <div class="header-text">
@@ -24,46 +28,147 @@
             </div>
 
             <div class="logo-box">
-                <img src="img/logo_3.png" alt="logo_3" class="header-logo">
-                <img src="img/logo_4.png" alt="logo_4" class="header-logo">
+                <img src="img/logo_3.png" alt="Logo 3" class="header-logo" onerror="this.style.display='none'">
+                <img src="img/logo_4.png" alt="Logo 4" class="header-logo" onerror="this.style.display='none'">
             </div>
         </div>
     </header>
 
     <nav class="main-nav">
-        <ul class="nav-list">
-            <li><a href="#" class="active">Trang chủ</a></li>
-            <li><a href="#">Thủ trưởng, BGH</a></li>
-            <li><a href="#">Cơ quan</a></li>
-            <li><a href="#">Khối giáo viên</a></li>
-            <li><a href="#">Tiểu đoàn</a></li>
-        </ul>
-    </nav>
+    <ul class="nav-list">
+        <li><a href="#" id="nav-home" class="active" onclick="goHome()">Trang chủ</a></li>
+        
+        <li><a href="#">Thủ trưởng, BGH</a></li>
+        <li><a href="#">Cơ quan</a></li>
+        <li><a href="#">Khối giáo viên</a></li>
 
-    <main class="container">
-        <div class="search-section">
-            <h2 class="section-title">TRA CỨU THÔNG TIN HỌC VIÊN</h2>
-            
-            <div class="search-box">
-                <input type="text" id="searchInput" placeholder="Nhập họ tên học viên cần tìm..." autocomplete="off"/>
-                <button id="searchBtn">
-                    Tìm kiếm
-                </button>
+        <li class="dropdown">
+            <a href="#" id="nav-battalion">Tiểu đoàn ▼</a>
+            <ul class="dropdown-content">
+                <li><a href="#" onclick="showBattalion('d1')">Tiểu đoàn 1</a></li>
+                <li><a href="#" onclick="showBattalion('d2')">Tiểu đoàn 2</a></li>
+                <li><a href="#" onclick="showBattalion('d61')">Tiểu đoàn 61</a></li>
+                <li><a href="#" onclick="showBattalion('d7')">Tiểu đoàn 7</a></li>
+            </ul>
+        </li>
+
+        <li><a href="#" id="nav-grade" onclick="showGradeView()">Tính Điểm</a></li>
+    </ul>
+</nav>
+
+    <main class="main-container">
+
+        <div id="home-view" class="view-section">
+            <div class="search-section">
+                <h2 class="section-title">TRA CỨU HỒ SƠ HỌC VIÊN</h2>
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="Nhập họ tên học viên cần tìm..."
+                        autocomplete="off">
+                    <button id="searchBtn">Tìm kiếm</button>
+                </div>
+            </div>
+            <div id="searchResultContainer" class="table-responsive"></div>
+        </div>
+
+        <div id="battalion-view" class="view-section" style="display: none;">
+            <div class="nav-actions">
+                <button onclick="goHome()" class="btn-back">❮ Về Trang chủ</button>
+            </div>
+            <h2 class="view-title">TIỂU ĐOÀN 1 - DANH SÁCH ĐƠN VỊ</h2>
+            <div class="unit-grid">
+                <div class="unit-card disabled">
+                    <h3>ĐẠI ĐỘI 1</h3><small>(Chưa có dữ liệu)</small>
+                </div>
+                <div class="unit-card disabled">
+                    <h3>ĐẠI ĐỘI 2</h3><small>(Chưa có dữ liệu)</small>
+                </div>
+                <div class="unit-card disabled">
+                    <h3>ĐẠI ĐỘI 3</h3><small>(Chưa có dữ liệu)</small>
+                </div>
+                <div class="unit-card active" onclick="showCompanyList('c4')">
+                    <h3>ĐẠI ĐỘI 4</h3>
+                    <p>Xem quân số</p>
+                </div>
             </div>
         </div>
 
-        <div id="resultContainer" class="result-container">
-            <div class="empty-state">
-                Vui lòng nhập tên để tra cứu dữ liệu
+        <div id="company-list-view" class="view-section" style="display: none;">
+            <div class="nav-actions">
+                <button onclick="showBattalion('d1')" class="btn-back">❮ Về Tiểu đoàn</button>
+                <div class="record-count" id="total-count">Tổng: 0</div>
+            </div>
+            <h2 class="view-title text-left">DANH SÁCH QUÂN SỐ - ĐẠI ĐỘI 4</h2>
+            <div id="tableContainer" class="table-responsive"></div>
+        </div>
+
+        <div id="grade-view" class="view-section" style="display: none;">
+            <div class="nav-actions">
+                <button onclick="goHome()" class="btn-back">❮ Về Trang chủ</button>
+            </div>
+            <h2 class="view-title">CÔNG CỤ TÍNH ĐIỂM HỌC TẬP</h2>
+
+            <div class="grade-container">
+                <div class="grade-card">
+                    <h3 class="card-header">1. TÍNH ĐIỂM MÔN HỌC</h3>
+                    <div class="form-group"><label>Thường xuyên (10%):</label><input type="number" id="s10" step="0.1">
+                    </div>
+                    <div class="form-group"><label>Hết phân (20%):</label><input type="number" id="s20" step="0.1">
+                    </div>
+                    <div class="form-group"><label>Hết môn (70%):</label><input type="number" id="s70" step="0.1"></div>
+                    <button onclick="calcSubjectScore()" class="action-btn">Tính kết quả</button>
+                    <div id="subjectResult" class="result-box" style="display:none">KẾT QUẢ: <span
+                            id="finalScore">0.0</span></div>
+                </div>
+
+                <div class="grade-card full-width">
+                    <h3 class="card-header">2. TÍNH ĐIỂM TRUNG BÌNH (GPA)</h3>
+                    <div class="add-subject-row">
+                        <select id="courseSelect" class="form-select">
+                            <option value="">-- Chọn môn học --</option>
+                        </select>
+                        <input type="number" id="gpaScore" placeholder="Điểm TK" style="width: 100px;">
+                        <button onclick="addToGPATable()" class="add-btn">Thêm</button>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="military-table" id="gpaTable">
+                            <thead>
+                                <tr>
+                                    <th>Môn học</th>
+                                    <th class="text-center">Số tín</th>
+                                    <th class="text-center">Điểm</th>
+                                    <th class="text-center"> </th>
+                                </tr>
+                            </thead>
+                            <tbody id="gpaListBody"></tbody>
+                        </table>
+                    </div>
+                    <div class="gpa-footer">
+                        <button onclick="calcGPA()" class="action-btn primary">Tính Trung Bình</button>
+                        <div id="gpaResult" class="result-box" style="display:none; margin-top:10px;">GPA: <span
+                                id="gpaValue" style="color:#b71c1c; font-size:24px">0.00</span></div>
+                    </div>
+                </div>
             </div>
         </div>
+
     </main>
 
     <footer>
-        <p>&copy; 2025 FireHelper Team. All Rights Reserved.</p>
+        <p>&copy; 2025 Trường Sĩ Quan Tăng Thiết Giáp. Bảo mật thông tin theo quy định.</p>
     </footer>
 
+    <div id="studentModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">THÔNG TIN CHI TIẾT</h3>
+                <span class="close-btn" onclick="closeModal()">&times;</span>
+            </div>
+            <div class="modal-body" id="modalBody"></div>
+        </div>
+    </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
-    <script src="./script.js"></script>
+    <script src="script.js"></script>
 </body>
+
 </html>

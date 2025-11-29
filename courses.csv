@@ -1,0 +1,60 @@
+﻿STT,Môn học,Mã môn,Số tín chỉ
+1,Giáo dục chính trị,A01,1
+2,Triết học Mác-Lênin,A02,4
+3,Kinh tế chính trị Mác-Lênin,A03,4
+4,Chủ nghĩa xã hội khoa học,A04,3
+5,Tư tưởng Hồ Chí Minh,A05,3
+6,Lịch sử Đảng Cộng sản Việt Nam,A06,4
+7,Dân tộc học và Tôn giáo học,A07,1
+8,Logic học,A08,1
+9,Cơ sở văn hóa Việt Nam,A09,1
+10,Nhà nước và Pháp luật,A10,3
+11,Tâm lý học quân sự,A11,2
+12,Giáo dục học quân sự,A12,2
+13,Đạo đức học,A13,1
+14,Tiếng Việt soạn thảo văn bản,A14,1
+15,"Công tác Đảng, công tác chính trị",A15,7
+16,Tiếng Nga đại cương,B01,3
+17,Tiếng Nga quân sự,B02,3
+18,Toán cao cấp,B03,1
+19,Công nghệ thông tin,B04,3
+20,Vật lý đại cương,B05,1
+21,Hóa học đại cương,B06,1
+22,Toán xác suất,B07,1
+23,Hình họa - Vẽ kỹ thuật,C01,1
+24,Cơ lý thuyết,C02,1
+25,Sức bền vật liệu,C03,1
+26,Công nghệ kim loại,C04,1
+27,"Kỹ thuật điện, điện tử",C05,3
+28,Chi tiết máy,C06,1
+29,Thủy lực và máy thủy lực,C07,1
+30,Dung sai lắp ghép và đo lường kỹ thuật,C08,1
+31,Địa hình quân sự,D01,2
+32,Công binh,D02,2
+33,"Hiểu biết quân, binh chủng và Vũ khí hủy diệt lớn",D03,2
+34,Hậu cần - Quân y,D04,2
+35,Điều lệnh,D05,4
+36,Thể thao quân sự,D06,3
+37,Chiến thuật bộ binh,E01,7
+38,Chiến thuật một xe tăng,E02,3
+39,Chiến thuật trung đội tăng,E03,5
+40,Chiến thuật đại đội tăng,E04,3
+41,Chiến thuật tiểu đoàn tăng,E05,2
+42,"Lý thuyết, quy tắc bắn",G01,1
+43,"Cấu tạo vũ khí xe tăng, xe thiết giáp",G02,3
+44,"Sử dụng vũ khí xe tăng, xe thiết giáp",G03,2
+45,"Thực hành bắn pháo, súng trên xe tăng",G04,4
+46,Tổ chức chỉ huy hỏa lực và phương pháp huấn luyện vũ khí,G05,1
+47,Hỏa khí đi cùng,G06,1
+48,Kỹ thuật bắn súng bộ binh,G07,3
+49,Tác chiến điện tử,H01,1
+50,"Thông tin xe tăng, xe thiết giáp",H02,4
+51,"Cấu tạo xe tăng, xe thiết giáp",K01,1
+52,"Động cơ xe tăng, xe thiết giáp",K02,1
+53,"Thiết bị xe tăng, xe thiết giáp",K03,1
+54,"Xe ô tô, bọc thép bánh lốp",K04,1
+55,"Sử dụng, sửa chữa xe tăng, xe thiết giáp",K05,2
+56,Lái xe tăng,K06,4
+57,Phương pháp nghiên cứu khoa học,Q01,1
+58,Công tác tham mưu tác chiến Tăng thiết giáp,Q02,2
+59,Phương pháp huấn luyện chiến thuật,Q03,2
