@@ -136,6 +136,7 @@ function showCompanyList(id) {
 
 // leader
 function showLeadershipView() {
+    closeMenu();
     hideAllViews();
     setActiveNav('nav-leadership');
     document.getElementById('leadership-view').style.display = 'block';
@@ -280,6 +281,7 @@ function parseOfficeData(rows) {
 }
 
 function showOfficeView() {
+    closeMenu();
     hideAllViews();
     setActiveNav('nav-office');
     document.getElementById('office-view').style.display = 'block';
@@ -366,6 +368,7 @@ function mapStaffToLeader(row) {
 
 // ranking
 function showRankingView() {
+    closeMenu();
     hideAllViews();
     setActiveNav('nav-ranking');
     document.getElementById('ranking-view').style.display = 'block';
@@ -430,6 +433,7 @@ function renderRankingTable() {
 }
 
 function showTeacherView() {
+    closeMenu();
     hideAllViews();
     setActiveNav('nav-teacher');
 

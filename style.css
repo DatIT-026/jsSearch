@@ -32,19 +32,28 @@ body {
     align-items: center;
     justify-content: space-between;
     padding: 0 15px;
+    gap: 20px;
 }
 
 .logo-box {
-    flex: 0 0 220px;
+    flex: 0 0 260px; 
     display: flex;
-    gap: 10px;
-    justify-content: center;
+    align-items: center;
+    gap: 30px; 
+    justify-content: center; 
 }
 
 .header-logo {
-    height: 75px;
+    height: 80px; 
     width: auto;
     object-fit: contain;
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.4));
+    transition: transform 0.3s ease;
+}
+
+.header-logo:hover {
+    transform: scale(1.05);
+    filter: drop-shadow(0 6px 8px rgba(0, 0, 0, 0.5));
 }
 
 .header-text {
@@ -114,6 +123,7 @@ body {
     display: flex;
     justify-content: center;
     margin: 0;
+    font-family: 'Roboto', Arial, Helvetica, sans-serif;
 }
 
 .nav-list>li {
