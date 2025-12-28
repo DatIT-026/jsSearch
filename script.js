@@ -1,17 +1,70 @@
 let studentsData = [];
 let coursesData = [];
 let gpaList = [];
+let departmentsData = [];
+let leadershipData = [];
+let officeData = [];
+let rankingData = [];
 
 // load data
 document.addEventListener('DOMContentLoaded', () => {
     // load students
-    fetch('data/data.csv')
-        .then(res => res.ok ? res.text() : Promise.reject('Không tìm thấy data.csv'))
+    fetch('data/students_data.csv')
+        .then(res => res.ok ? res.text() : Promise.reject('Không tìm thấy dữ liệu của Student'))
         .then(text => Papa.parse(text, {
             header: true, skipEmptyLines: true,
             complete: r => studentsData = r.data
         }))
         .catch(err => console.error(err));
+
+    // load leader
+    fetch('data/leadership_data.csv')
+        .then(res => res.ok ? res.text() : Promise.reject('Không tìm thấy dữ liệu của Ban Giám Hiệu'))
+        .then(text => Papa.parse(text, {
+            header: true,
+            skipEmptyLines: true,
+            complete: function (r) {
+                leadershipData = r.data;
+            }
+        }))
+        .catch(err => console.warn(err));
+
+    // load co quan
+    fetch('data/office_data.csv')
+        .then(res => res.ok ? res.text() : Promise.reject('Không tìm thấy dữ liệu Cơ quan'))
+        .then(text => Papa.parse(text, {
+            header: false,
+            skipEmptyLines: true,
+            complete: function (r) {
+                parseOfficeData(r.data);
+            }
+        }))
+        .catch(err => console.warn(err));
+
+    // load rank
+    fetch('data/ranking_data.csv')
+    .then(res => res.ok ? res.text() : Promise.reject('Không tìm thấy dữ liệu của Bảng xếp hạng'))
+    .then(text => Papa.parse(text, {
+        header: true,
+        skipEmptyLines: true,
+        complete: function (r) {
+            rankingData = r.data;
+            rankingData.sort((a, b) => parseFloat(b['Điểm TB']) - parseFloat(a['Điểm TB']));
+        }
+    }))
+    .catch(err => console.warn(err));
+
+    // load teachers
+    fetch('data/teacher_data.csv')
+        .then(res => res.ok ? res.text() : Promise.reject('Không tìm thấy teacher_data.csv'))
+        .then(text => Papa.parse(text, {
+            header: false,
+            skipEmptyLines: true,
+            complete: function (r) {
+                departmentsData = r.data.map(row => row[0]);
+            }
+        }))
+        .catch(err => console.warn(err));
 
     // load courses
     fetch('data/courses.csv')
@@ -28,7 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // navigation
 function hideAllViews() {
-    ['home-view', 'battalion-view', 'company-list-view', 'grade-view'].forEach(id => {
+    ['home-view', 'battalion-view', 'company-list-view', 'grade-view', 'teacher-view', 'leadership-view', 'office-view', 'ranking-view'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.style.display = 'none';
     });
@@ -52,8 +105,8 @@ function goHome() {
     const resultContainer = document.getElementById('searchResultContainer');
     if (resultContainer) resultContainer.innerHTML = '';
     setActiveNav('nav-home');
-    
-    // Close menu with delay to allow smooth transition
+
+    // close menu with delay to allow smooth transition
     setTimeout(() => closeMenu(), 150);
 }
 
@@ -67,8 +120,8 @@ function showBattalion(id) {
         return;
     }
     setActiveNav('nav-battalion');
-    
-    // Close menu with delay to allow smooth transition
+
+    // close menu with delay to allow smooth transition
     setTimeout(() => closeMenu(), 150);
 }
 
@@ -76,9 +129,349 @@ function showCompanyList(id) {
     hideAllViews();
     document.getElementById('company-list-view').style.display = 'block';
     if (id === 'c4') renderTable(studentsData, 'tableContainer', 'total-count');
-    
-    // Close menu with delay to allow smooth transition
+
+    // close menu with delay to allow smooth transition
     setTimeout(() => closeMenu(), 150);
+}
+
+// leader
+function showLeadershipView() {
+    hideAllViews();
+    setActiveNav('nav-leadership');
+    document.getElementById('leadership-view').style.display = 'block';
+    renderLeadership();
+}
+
+function renderLeadership() {
+    const container = document.getElementById('leadership-list');
+    container.innerHTML = '';
+
+    if (leadershipData.length === 0) {
+        container.innerHTML = '<p class="text-center">Đang cập nhật dữ liệu lãnh đạo...</p>';
+        return;
+    }
+
+    leadershipData.sort((a, b) => parseInt(a.STT) - parseInt(b.STT));
+
+    leadershipData.forEach(leader => {
+        const card = document.createElement('div');
+        card.className = 'leader-card';
+        const avatarSrc = 'img/default_avatar.webp';
+
+        card.innerHTML = `
+            <div class="leader-avatar-box">
+                <img src="${avatarSrc}" class="leader-avatar" alt="${leader['Họ và tên']}">
+            </div>
+            <div class="leader-info">
+                <span class="leader-rank">${leader['Cấp bậc']}</span>
+                <h3 class="leader-name">${leader['Họ và tên']}</h3>
+                <div class="leader-position">${leader['Chức vụ']}</div>
+            </div>
+        `;
+
+        card.onclick = () => showLeaderDetail(leader);
+
+        container.appendChild(card);
+    });
+}
+
+function showLeaderDetail(leader) {
+    const modal = document.getElementById('studentModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalBody = document.getElementById('modalBody');
+
+    modalTitle.innerText = "LÝ LỊCH TRÍCH NGANG";
+
+    modalBody.innerHTML = `
+        <div style="text-align: center; margin-bottom: 20px;">
+            <h2 style="color: #b71c1c; text-transform: uppercase;">${leader['Họ và tên']}</h2>
+            <p style="font-weight: bold; font-size: 16px;">${leader['Cấp bậc']} - ${leader['Chức vụ']}</p>
+        </div>
+
+        <table class="detail-table">
+            <tbody>
+                <tr>
+                    <td class="detail-label">Ngày sinh:</td>
+                    <td>${leader['Ngày sinh'] || '...'}</td>
+                </tr>
+                <tr>
+                    <td class="detail-label">Dân tộc / Tôn giáo:</td>
+                    <td>${leader['Dân tộc']} / ${leader['Tôn giáo']}</td>
+                </tr>
+                <tr>
+                    <td class="detail-label">Trình độ:</td>
+                    <td>${leader['Trình độ']}</td>
+                </tr>
+                <tr>
+                    <td class="detail-label">Năm bổ nhiệm:</td>
+                    <td>${leader['Năm nhận chức vụ']}</td>
+                </tr>
+                <tr>
+                    <td class="detail-label">Ngày vào Đảng:</td>
+                    <td>${leader['Ngày vào Đảng']} (${leader['Chức vụ Đảng']})</td>
+                </tr>
+                <tr>
+                    <td class="detail-label">Nguyên quán:</td>
+                    <td>${leader['Nguyên quán']}</td>
+                </tr>
+                <tr>
+                    <td class="detail-label">Quê quán:</td>
+                    <td>${leader['Quê quán']}</td>
+                </tr>
+                <tr>
+                    <td class="detail-label">Trú quán:</td>
+                    <td>${leader['Trú quán']}</td>
+                </tr>
+            </tbody>
+        </table>
+    `;
+
+    modal.style.display = "block";
+}
+
+// office
+function parseOfficeData(rows) {
+    officeData = [];
+    let currentOffice = null;
+    let currentUnit = null;
+
+    for (let i = 1; i < rows.length; i++) {
+        const row = rows[i];
+        const col0 = (row[0] || '').trim();
+
+        if (col0.toUpperCase().startsWith('PHÒNG')) {
+            currentOffice = {
+                name: col0,
+                commanders: [],
+                units: []
+            };
+            officeData.push(currentOffice);
+            currentUnit = null;
+            continue;
+        }
+
+        if (col0.startsWith('Ban') && !row[2] && !row[3]) {
+            currentUnit = {
+                name: col0,
+                staff: []
+            };
+            if (currentOffice) {
+                currentOffice.units.push(currentUnit);
+            }
+            continue;
+        }
+
+        if (row[1] || row[2] || row[3]) {
+            const staff = {
+                name: row[1] || '',
+                rank: row[2] || '',
+                position: row[3] || '',
+                fullInfo: row
+            };
+
+            if (currentUnit) {
+                currentUnit.staff.push(staff);
+            } 
+            else if (currentOffice) {
+                currentOffice.commanders.push(staff);
+            }
+        }
+    }
+}
+
+function showOfficeView() {
+    hideAllViews();
+    setActiveNav('nav-office');
+    document.getElementById('office-view').style.display = 'block';
+    renderOffice();
+}
+
+function renderOffice() {
+    const container = document.getElementById('office-container');
+    container.innerHTML = '';
+
+    if (officeData.length === 0) {
+        container.innerHTML = '<p class="text-center">Đang cập nhật dữ liệu cơ quan...</p>';
+        return;
+    }
+
+    officeData.forEach(office => {
+        const card = document.createElement('div');
+        card.className = 'office-card';
+
+        let html = `
+            <div class="office-header">
+                <h3 class="office-title">${office.name}</h3>
+            </div>
+            <div class="office-body">
+        `;
+
+        if (office.commanders.length > 0) {
+            html += `<div class="command-list"><div class="sub-title">Chỉ huy phòng</div>`;
+            html += `<table class="staff-mini-table">`;
+            office.commanders.forEach(cmd => {
+                html += `
+                    <tr onclick='showLeaderDetail(${JSON.stringify(mapStaffToLeader(cmd.fullInfo))})' style="cursor:pointer">
+                        <td class="staff-role">${cmd.position}</td>
+                        <td class="staff-name">${cmd.rank} ${cmd.name}</td>
+                    </tr>`;
+            });
+            html += `</table></div>`;
+        }
+
+        if (office.units.length > 0) {
+            html += `<div class="unit-grid">`;
+            office.units.forEach(unit => {
+                html += `
+                    <div class="unit-box">
+                        <div class="unit-name">${unit.name}</div>
+                        <table class="staff-mini-table">
+                `;
+                unit.staff.forEach(s => {
+                    html += `
+                        <tr onclick='showLeaderDetail(${JSON.stringify(mapStaffToLeader(s.fullInfo))})' style="cursor:pointer">
+                            <td class="staff-role">${s.position}</td>
+                            <td class="staff-name">${s.rank} ${s.name}</td>
+                        </tr>`;
+                });
+                html += `</table></div>`;
+            });
+            html += `</div>`;
+        }
+
+        html += `</div>`; // close office-body
+        card.innerHTML = html;
+        container.appendChild(card);
+    });
+}
+
+
+function mapStaffToLeader(row) {
+    return {
+        'Họ và tên': row[1],
+        'Cấp bậc': row[2],
+        'Chức vụ': row[3],
+        'Dân tộc': row[4],
+        'Tôn giáo': row[5],
+        'Trình độ': row[6],
+        'Ngày vào Đảng': row[7],
+        'Chức vụ Đảng': '',
+        'Ngày sinh': row[8],
+        'Nguyên quán': row[9],
+        'Quê quán': row[10],
+        'Trú quán': row[11],
+        'Năm nhận chức vụ': row[12]
+    };
+}
+
+// ranking
+function showRankingView() {
+    hideAllViews();
+    setActiveNav('nav-ranking');
+    document.getElementById('ranking-view').style.display = 'block';
+    renderRankingTable();
+}
+
+function renderRankingTable() {
+    const tbody = document.getElementById('ranking-body');
+    tbody.innerHTML = '';
+
+    if (rankingData.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" class="text-center">Đang tải dữ liệu...</td></tr>';
+        return;
+    }
+
+    let cstdCount = 0;
+    let csttCount = 0;
+    let warnCount = 0;
+
+    rankingData.forEach((student, index) => {
+        const tr = document.createElement('tr');
+        
+        const rank = index + 1;
+        
+        if (rank === 1) tr.classList.add('top-1');
+        else if (rank === 2) tr.classList.add('top-2');
+        else if (rank === 3) tr.classList.add('top-3');
+
+        let violationHtml = '';
+        if (student['Vi Phạm'] && student['Vi Phạm'].toLowerCase().includes('x')) {
+            violationHtml = '<span class="status-bad">Kỷ luật</span>';
+            warnCount++;
+        } else {
+            violationHtml = '<span class="status-good">✓</span>';
+        }
+
+        let titleHtml = '<span class="badge-none">-</span>';
+        const title = student['Xếp Loại'] ? student['Xếp Loại'].trim() : '';
+        
+        if (title === 'CSTĐ') {
+            titleHtml = '<span class="badge badge-cstd">Chiến sĩ thi đua</span>';
+            cstdCount++;
+        } else if (title === 'CSTT') {
+            titleHtml = '<span class="badge badge-cstt">Chiến sĩ tiên tiến</span>';
+            csttCount++;
+        }
+
+        tr.innerHTML = `
+            <td class="text-center"><span class="rank-num">${rank}</span></td>
+            <td style="font-weight: 500;">${student['Họ và tên']}</td>
+            <td class="text-center" style="font-weight: bold; color:#b71c1c">${student['Điểm TB']}</td>
+            <td class="text-center">${violationHtml}</td>
+            <td class="text-center">${titleHtml}</td>
+        `;
+
+        tbody.appendChild(tr);
+    });
+
+    document.getElementById('count-cstd').innerText = cstdCount;
+    document.getElementById('count-cstt').innerText = csttCount;
+    document.getElementById('count-warn').innerText = warnCount;
+}
+
+function showTeacherView() {
+    hideAllViews();
+    setActiveNav('nav-teacher');
+
+    document.getElementById('teacher-view').style.display = 'block';
+    renderDepartments();
+}
+
+function renderDepartments() {
+    const container = document.getElementById('department-list');
+    container.innerHTML = '';
+
+    if (departmentsData.length === 0) {
+        container.innerHTML = '<p class="text-center">Đang cập nhật dữ liệu khoa...</p>';
+        return;
+    }
+
+    departmentsData.forEach(deptName => {
+        if (!deptName) return;
+
+        let displayName = deptName;
+
+        if (displayName.includes("Tham Mưu Phương Pháp")) {
+            displayName = displayName.replace("Tham Mưu", "Tham Mưu<br>");
+        }
+
+        const card = document.createElement('div');
+        card.className = 'department-card';
+        card.innerHTML = `
+            <div class="dept-info">
+                <span class="dept-name">${displayName}</span>
+            </div>
+            <div class="dept-icon">
+                🏛️
+            </div> 
+        `;
+
+        card.onclick = () => {
+            alert(`Đang truy cập: ${deptName}`);
+        };
+
+        container.appendChild(card);
+    });
 }
 
 function showGradeView(event) {
@@ -239,7 +632,7 @@ function initCourseSelect() {
 
             const displayCode = code ? ` [${code}]` : '';
             opt.text = `${displayCode} ${c['Môn học']} (${c['Số tín chỉ']} tín)`;
-            
+
             sel.appendChild(opt);
         }
     });
@@ -284,8 +677,8 @@ function addToGPATable() {
 function renderGPATable() {
     const tbody = document.getElementById('gpaListBody');
     tbody.innerHTML = '';
-    
-    if(gpaList.length === 0) return;
+
+    if (gpaList.length === 0) return;
 
     gpaList.forEach((item, idx) => {
         tbody.innerHTML += `

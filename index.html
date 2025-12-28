@@ -16,8 +16,8 @@
     <header class="site-header">
         <div class="header-content">
             <div class="logo-box">
-                <img src="img/logo_1.png" alt="Logo 1" class="header-logo" onerror="this.style.display='none'">
-                <img src="img/logo_2.png" alt="Logo 2" class="header-logo" onerror="this.style.display='none'">
+                <img src="img/logo_1.webp" alt="Logo 1" class="header-logo" onerror="this.style.display='none'">
+                <img src="img/logo_2.webp" alt="Logo 2" class="header-logo" onerror="this.style.display='none'">
             </div>
 
             <div class="header-text">
@@ -28,8 +28,8 @@
             </div>
 
             <div class="logo-box">
-                <img src="img/logo_3.png" alt="Logo 3" class="header-logo" onerror="this.style.display='none'">
-                <img src="img/logo_4.png" alt="Logo 4" class="header-logo" onerror="this.style.display='none'">
+                <img src="img/logo_3.webp" alt="Logo 3" class="header-logo" onerror="this.style.display='none'">
+                <img src="img/logo_4.webp" alt="Logo 4" class="header-logo" onerror="this.style.display='none'">
             </div>
         </div>
     </header>
@@ -43,10 +43,11 @@
 
         <ul class="nav-list" id="navMenu">
             <li><a href="#" id="nav-home" class="active" onclick="goHome()">Trang chủ</a></li>
-            <li><a href="#">Thủ trưởng, BGH</a></li>
-            <li><a href="#">Cơ quan</a></li>
-            <li><a href="#">Khối giáo viên</a></li>
+            <li><a href="#" id="nav-leadership" onclick="showLeadershipView()">Thủ trưởng, BGH</a></li>
+            <li><a href="#" id="nav-office" onclick="showOfficeView()">Cơ quan</a></li>
+            <li><a href="#" id="nav-teacher" onclick="showTeacherView()">Khối giáo viên</a></li>
             <li><a href="#" id="nav-grade" onclick="showGradeView(event)">Tính Điểm</a></li>
+            <li><a href="#" id="nav-ranking" onclick="showRankingView()">Xếp Hạng</a></li>
 
             <li class="dropdown">
                 <a href="#" id="nav-battalion" class="dropdown-toggle" onclick="dropDown()">
@@ -84,7 +85,6 @@
     </script>
 
     <main class="main-container">
-
         <div id="home-view" class="view-section">
             <div class="search-section">
                 <h2 class="section-title">TRA CỨU HỒ SƠ HỌC VIÊN</h2>
@@ -127,6 +127,75 @@
             <h2 class="view-title text-left">DANH SÁCH QUÂN SỐ - Đại Đội 4</h2>
             <div id="tableContainer" class="table-responsive"></div>
         </div>
+
+        <section id="leadership-view" class="view-section" style="display: none;">
+            <div class="section-header">
+                <h2 class="view-title">THỦ TRƯỞNG - BAN GIÁM HIỆU</h2>
+            </div>
+
+            <div class="content-box">
+                <div id="leadership-list" class="leader-grid"></div>
+            </div>
+        </section>
+
+        <section id="office-view" class="view-section" style="display: none;">
+            <div class="section-header">
+                <h2 class="view-title">KHỐI CƠ QUAN</h2>
+            </div>
+
+            <div class="content-box">
+                <div id="office-container" class="office-wrapper"></div>
+            </div>
+        </section>
+
+        <section id="teacher-view" class="view-section" style="display: none;">
+            <div class="section-header">
+                <h2 class="view-title">DANH SÁCH CÁC KHOA GIÁO VIÊN</h2>
+            </div>
+
+            <div class="content-box">
+                <div id="department-list" class="department-grid"></div>
+            </div>
+        </section>
+
+        <section id="ranking-view" class="view-section" style="display: none;">
+            <div class="section-header">
+                <h2 class="view-title">BẢNG XẾP HẠNG THI ĐUA</h2>
+            </div>
+
+            <div class="content-box">
+                <div class="ranking-stats">
+                    <div class="stat-card gold">
+                        <h3>CSTĐ</h3>
+                        <span id="count-cstd">0</span>
+                    </div>
+                    <div class="stat-card green">
+                        <h3>CSTT</h3>
+                        <span id="count-cstt">0</span>
+                    </div>
+                    <div class="stat-card red">
+                        <h3>Vi Phạm</h3>
+                        <span id="count-warn">0</span>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="rank-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 50px;">Hạng</th>
+                                <th>Họ và tên</th>
+                                <th class="text-center">Điểm TB</th>
+                                <th class="text-center">Vi Phạm</th>
+                                <th class="text-center">Danh Hiệu</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ranking-body">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
 
         <div id="grade-view" class="view-section" style="display: none;">
             <div class="nav-actions">
