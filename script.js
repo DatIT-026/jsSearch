@@ -6,9 +6,7 @@ let leadershipData = [];
 let officeData = [];
 let rankingData = [];
 
-// load data
 document.addEventListener('DOMContentLoaded', () => {
-    // load students
     fetch('data/students_data.csv')
         .then(res => res.ok ? res.text() : Promise.reject('Không tìm thấy dữ liệu của Student'))
         .then(text => Papa.parse(text, {
@@ -17,61 +15,56 @@ document.addEventListener('DOMContentLoaded', () => {
         }))
         .catch(err => console.error(err));
 
-    // load leader
     fetch('data/leadership_data.csv')
         .then(res => res.ok ? res.text() : Promise.reject('Không tìm thấy dữ liệu của Ban Giám Hiệu'))
         .then(text => Papa.parse(text, {
             header: true,
             skipEmptyLines: true,
-            complete: function (r) {
+            complete: r => {
                 leadershipData = r.data;
             }
         }))
         .catch(err => console.warn(err));
 
-    // load co quan
     fetch('data/office_data.csv')
         .then(res => res.ok ? res.text() : Promise.reject('Không tìm thấy dữ liệu Cơ quan'))
         .then(text => Papa.parse(text, {
             header: false,
             skipEmptyLines: true,
-            complete: function (r) {
+            complete: r => {
                 parseOfficeData(r.data);
             }
         }))
         .catch(err => console.warn(err));
 
-    // load rank
     fetch('data/ranking_data.csv')
     .then(res => res.ok ? res.text() : Promise.reject('Không tìm thấy dữ liệu của Bảng xếp hạng'))
     .then(text => Papa.parse(text, {
         header: true,
         skipEmptyLines: true,
-        complete: function (r) {
+        complete: r => {
             rankingData = r.data;
             rankingData.sort((a, b) => parseFloat(b['Điểm TB']) - parseFloat(a['Điểm TB']));
         }
     }))
     .catch(err => console.warn(err));
 
-    // load teachers
     fetch('data/teacher_data.csv')
         .then(res => res.ok ? res.text() : Promise.reject('Không tìm thấy teacher_data.csv'))
         .then(text => Papa.parse(text, {
             header: false,
             skipEmptyLines: true,
-            complete: function (r) {
+            complete: r => {
                 departmentsData = r.data.map(row => row[0]);
             }
         }))
         .catch(err => console.warn(err));
 
-    // load courses
     fetch('data/courses.csv')
         .then(res => res.ok ? res.text() : Promise.reject('Không tìm thấy course.csv'))
         .then(text => Papa.parse(text, {
             header: true, skipEmptyLines: true,
-            complete: function (r) {
+            complete: r => {
                 coursesData = r.data;
                 initCourseSelect();
             }
@@ -79,16 +72,14 @@ document.addEventListener('DOMContentLoaded', () => {
         .catch(err => console.warn(err));
 });
 
-// navigation
-function hideAllViews() {
+const hideAllViews = () => {
     ['home-view', 'battalion-view', 'company-list-view', 'grade-view', 'teacher-view', 'leadership-view', 'office-view', 'ranking-view'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.style.display = 'none';
     });
-}
+};
 
-// focus menu
-function setActiveNav(selectedId) {
+const setActiveNav = (selectedId) => {
     const links = document.querySelectorAll('.nav-list > li > a');
 
     links.forEach(link => link.classList.remove('active'));
@@ -97,20 +88,19 @@ function setActiveNav(selectedId) {
     if (activeLink) {
         activeLink.classList.add('active');
     }
-}
+};
 
-function goHome() {
+const goHome = () => {
     hideAllViews();
     document.getElementById('home-view').style.display = 'block';
     const resultContainer = document.getElementById('searchResultContainer');
     if (resultContainer) resultContainer.innerHTML = '';
     setActiveNav('nav-home');
 
-    // close menu with delay to allow smooth transition
     setTimeout(() => closeMenu(), 150);
-}
+};
 
-function showBattalion(id) {
+const showBattalion = (id) => {
     hideAllViews();
     if (id === 'd1') {
         document.getElementById('battalion-view').style.display = 'block';
@@ -121,29 +111,26 @@ function showBattalion(id) {
     }
     setActiveNav('nav-battalion');
 
-    // close menu with delay to allow smooth transition
     setTimeout(() => closeMenu(), 150);
-}
+};
 
-function showCompanyList(id) {
+const showCompanyList = (id) => {
     hideAllViews();
     document.getElementById('company-list-view').style.display = 'block';
     if (id === 'c4') renderTable(studentsData, 'tableContainer', 'total-count');
 
-    // close menu with delay to allow smooth transition
     setTimeout(() => closeMenu(), 150);
-}
+};
 
-// leader
-function showLeadershipView() {
+const showLeadershipView = () => {
     closeMenu();
     hideAllViews();
     setActiveNav('nav-leadership');
     document.getElementById('leadership-view').style.display = 'block';
     renderLeadership();
-}
+};
 
-function renderLeadership() {
+const renderLeadership = () => {
     const container = document.getElementById('leadership-list');
     container.innerHTML = '';
 
@@ -174,9 +161,9 @@ function renderLeadership() {
 
         container.appendChild(card);
     });
-}
+};
 
-function showLeaderDetail(leader) {
+const showLeaderDetail = (leader) => {
     const modal = document.getElementById('studentModal');
     const modalTitle = document.getElementById('modalTitle');
     const modalBody = document.getElementById('modalBody');
@@ -228,10 +215,9 @@ function showLeaderDetail(leader) {
     `;
 
     modal.style.display = "block";
-}
+};
 
-// office
-function parseOfficeData(rows) {
+const parseOfficeData = (rows) => {
     officeData = [];
     let currentOffice = null;
     let currentUnit = null;
@@ -278,17 +264,17 @@ function parseOfficeData(rows) {
             }
         }
     }
-}
+};
 
-function showOfficeView() {
+const showOfficeView = () => {
     closeMenu();
     hideAllViews();
     setActiveNav('nav-office');
     document.getElementById('office-view').style.display = 'block';
     renderOffice();
-}
+};
 
-function renderOffice() {
+const renderOffice = () => {
     const container = document.getElementById('office-container');
     container.innerHTML = '';
 
@@ -341,14 +327,13 @@ function renderOffice() {
             html += `</div>`;
         }
 
-        html += `</div>`; // close office-body
+        html += `</div>`; 
         card.innerHTML = html;
         container.appendChild(card);
     });
-}
+};
 
-
-function mapStaffToLeader(row) {
+const mapStaffToLeader = (row) => {
     return {
         'Họ và tên': row[1],
         'Cấp bậc': row[2],
@@ -364,18 +349,17 @@ function mapStaffToLeader(row) {
         'Trú quán': row[11],
         'Năm nhận chức vụ': row[12]
     };
-}
+};
 
-// ranking
-function showRankingView() {
+const showRankingView = () => {
     closeMenu();
     hideAllViews();
     setActiveNav('nav-ranking');
     document.getElementById('ranking-view').style.display = 'block';
     renderRankingTable();
-}
+};
 
-function renderRankingTable() {
+const renderRankingTable = () => {
     const tbody = document.getElementById('ranking-body');
     tbody.innerHTML = '';
 
@@ -392,13 +376,28 @@ function renderRankingTable() {
         const tr = document.createElement('tr');
         
         const rank = index + 1;
-        
         if (rank === 1) tr.classList.add('top-1');
         else if (rank === 2) tr.classList.add('top-2');
         else if (rank === 3) tr.classList.add('top-3');
 
+        const score = parseFloat(student['Điểm TB']);
+        const violationRaw = student['Vi Phạm'] ? student['Vi Phạm'].toLowerCase() : '';
+        const isViolated = violationRaw.includes('x');
+
+        let titleCode = 'NONE';
+        
+        if (isViolated) {
+            titleCode = 'NONE';
+        } else {
+            if (score >= 8.0) {
+                titleCode = 'CSTD';
+            } else if (score >= 7.5) {
+                titleCode = 'CSTT';
+            }
+        }
+
         let violationHtml = '';
-        if (student['Vi Phạm'] && student['Vi Phạm'].toLowerCase().includes('x')) {
+        if (isViolated) {
             violationHtml = '<span class="status-bad">Kỷ luật</span>';
             warnCount++;
         } else {
@@ -406,12 +405,11 @@ function renderRankingTable() {
         }
 
         let titleHtml = '<span class="badge-none">-</span>';
-        const title = student['Xếp Loại'] ? student['Xếp Loại'].trim() : '';
         
-        if (title === 'CSTĐ') {
+        if (titleCode === 'CSTD') {
             titleHtml = '<span class="badge badge-cstd">Chiến sĩ thi đua</span>';
             cstdCount++;
-        } else if (title === 'CSTT') {
+        } else if (titleCode === 'CSTT') {
             titleHtml = '<span class="badge badge-cstt">Chiến sĩ tiên tiến</span>';
             csttCount++;
         }
@@ -419,7 +417,7 @@ function renderRankingTable() {
         tr.innerHTML = `
             <td class="text-center"><span class="rank-num">${rank}</span></td>
             <td style="font-weight: 500;">${student['Họ và tên']}</td>
-            <td class="text-center" style="font-weight: bold; color:#b71c1c">${student['Điểm TB']}</td>
+            <td class="text-center" style="font-weight: bold; color:#b71c1c">${score}</td>
             <td class="text-center">${violationHtml}</td>
             <td class="text-center">${titleHtml}</td>
         `;
@@ -430,18 +428,18 @@ function renderRankingTable() {
     document.getElementById('count-cstd').innerText = cstdCount;
     document.getElementById('count-cstt').innerText = csttCount;
     document.getElementById('count-warn').innerText = warnCount;
-}
+};
 
-function showTeacherView() {
+const showTeacherView = () => {
     closeMenu();
     hideAllViews();
     setActiveNav('nav-teacher');
 
     document.getElementById('teacher-view').style.display = 'block';
     renderDepartments();
-}
+};
 
-function renderDepartments() {
+const renderDepartments = () => {
     const container = document.getElementById('department-list');
     container.innerHTML = '';
 
@@ -476,9 +474,9 @@ function renderDepartments() {
 
         container.appendChild(card);
     });
-}
+};
 
-function showGradeView(event) {
+const showGradeView = (event) => {
     if (event) {
         event.stopPropagation();
         event.preventDefault();
@@ -493,10 +491,9 @@ function showGradeView(event) {
     });
 
     closeMenu();
-}
+};
 
-// render data table
-function renderTable(data, containerId, countId) {
+const renderTable = (data, containerId, countId) => {
     const container = document.getElementById(containerId);
     if (countId && document.getElementById(countId)) {
         document.getElementById(countId).innerText = `Tổng số: ${data.length} đ/c`;
@@ -523,7 +520,6 @@ function renderTable(data, containerId, countId) {
     `;
 
     data.forEach((st, i) => {
-        // encoding
         const safeData = encodeURIComponent(JSON.stringify(st));
         html += `
             <tr onclick="openModal('${safeData}')">
@@ -538,9 +534,8 @@ function renderTable(data, containerId, countId) {
     });
     html += '</tbody></table>';
     container.innerHTML = html;
-}
+};
 
-// search
 const searchBtn = document.getElementById('searchBtn');
 if (searchBtn) {
     searchBtn.addEventListener('click', () => {
@@ -559,8 +554,7 @@ if (searchBtn) {
     });
 }
 
-// modal
-function openModal(dataStr) {
+const openModal = (dataStr) => {
     try {
         const s = JSON.parse(decodeURIComponent(dataStr));
         const mBody = document.getElementById('modalBody');
@@ -585,18 +579,18 @@ function openModal(dataStr) {
     } catch (e) {
         console.error("Lỗi hiển thị modal", e);
     }
-}
+};
 
-function closeModal() { document.getElementById('studentModal').style.display = 'none'; }
-window.onclick = (e) => { if (e.target == document.getElementById('studentModal')) closeModal(); }
+const closeModal = () => { document.getElementById('studentModal').style.display = 'none'; };
+window.onclick = (e) => { if (e.target == document.getElementById('studentModal')) closeModal(); };
 
-function isValidScore(value) {
+const isValidScore = (value) => {
     if (value === '' || value === null) return false;
     const num = parseFloat(value);
     return !isNaN(num) && num >= 0 && num <= 10;
-}
+};
 
-function calcSubjectScore() {
+const calcSubjectScore = () => {
     const el10 = document.getElementById('s10');
     const el20 = document.getElementById('s20');
     const el70 = document.getElementById('s70');
@@ -621,10 +615,9 @@ function calcSubjectScore() {
     else {
         resultSpan.style.color = 'red';
     }
-}
+};
 
-// gpa
-function initCourseSelect() {
+const initCourseSelect = () => {
     const sel = document.getElementById('courseSelect');
     if (!sel) return;
 
@@ -640,9 +633,9 @@ function initCourseSelect() {
             sel.appendChild(opt);
         }
     });
-}
+};
 
-function addToGPATable() {
+const addToGPATable = () => {
     const select = document.getElementById('courseSelect');
     const scoreInput = document.getElementById('gpaScore');
 
@@ -663,22 +656,19 @@ function addToGPATable() {
     const credit = parseInt(cred);
     const score = parseFloat(scoreVal);
 
-    // is this course available in the list?
     const index = gpaList.findIndex(item => item.name === name);
 
     if (index !== -1) {
         if (gpaList[index].score !== score) gpaList[index].score = score;
     } else gpaList.push({ name: name, credit: credit, score: score, code: code });
 
-    // re-render table & reset form
     renderGPATable();
 
-    // select.value = '';
     scoreInput.value = '';
     scoreInput.focus();
-}
+};
 
-function renderGPATable() {
+const renderGPATable = () => {
     const tbody = document.getElementById('gpaListBody');
     tbody.innerHTML = '';
 
@@ -695,18 +685,17 @@ function renderGPATable() {
             </tr>
         `;
     });
-}
+};
 
-function removeGpa(idx) {
+const removeGpa = (idx) => {
     if (confirm("Bạn có chắc muốn xóa môn học này?")) {
         gpaList.splice(idx, 1);
         renderGPATable();
-        // an kq cu neu thay doi list
         document.getElementById('gpaResult').style.display = 'none';
     }
-}
+};
 
-function calcGPA() {
+const calcGPA = () => {
     if (gpaList.length === 0) {
         alert("Danh sách môn học đang trống! Vui lòng thêm môn học.");
         return;
@@ -718,7 +707,6 @@ function calcGPA() {
         totalC += i.credit;
     });
 
-    // Validate chia cho 0
     if (totalC === 0) {
         alert("Tổng số tín chỉ bằng 0, không thể tính trung bình!");
         return;
@@ -734,11 +722,9 @@ function calcGPA() {
     if (gpa >= 8.0) gpaSpan.style.color = '#2e7d32';
     else if (gpa >= 5.0) gpaSpan.style.color = '#ff9800';
     else gpaSpan.style.color = '#b71c1c';
-}
+};
 
-// mobile menu function
-
-function toggleMenu() {
+const toggleMenu = () => {
     const navMenu = document.getElementById('navMenu');
     navMenu.classList.toggle('active');
 
@@ -748,12 +734,12 @@ function toggleMenu() {
     } else {
         if (mainContainer) mainContainer.style.pointerEvents = 'auto';
     }
-}
+};
 
-function closeMenu() {
+const closeMenu = () => {
     const navMenu = document.getElementById('navMenu');
     navMenu.classList.remove('active');
 
     const mainContainer = document.querySelector('.main-container');
     if (mainContainer) mainContainer.style.pointerEvents = 'auto';
-}
+};
