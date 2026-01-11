@@ -37,16 +37,18 @@ body {
 
 .logo-box {
     flex: 0 0 360px;
+    height: 90px;
     display: flex;
     align-items: center;
-    gap: 20px; 
     justify-content: center; 
 }
 
 .header-logo {
-    height: 90px; 
+    height: 100%; 
     width: auto;
     object-fit: contain;
+    object-position: center;
+    display: block;
     filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.4));
     transition: transform 0.3s ease;
 }
@@ -55,6 +57,23 @@ body {
     transform: scale(1.05);
     filter: drop-shadow(0 6px 8px rgba(0, 0, 0, 0.5));
 }
+
+.logo-L1, .logo-L2 {
+    margin-right: 5%;
+}
+
+.logo-L3 {
+    height: 123%;
+    margin-left: -3%;
+    margin-top: -6px;
+}
+
+
+.logo-R1 {
+    margin-right: 5%;
+}
+
+.logo-R2 {}
 
 .header-text {
     flex: 1;
@@ -602,7 +621,7 @@ body {
 .clickable-name {
     color: #0d47a1;
     cursor: pointer;
-    text-decoration: underline;
+    text-decoration: none;
     font-weight: 600 !important;
 }
 
@@ -991,12 +1010,21 @@ footer {
 
     .logo-box {
         flex: 0 0 auto;
-        /* width: 100%; */
-        /* justify-content: space-around; */
+        width: 100%;        
+        justify-content: center;
     }
 
     .header-logo {
-        height: 50px;
+        height: 85%;
+    }
+
+    .logo-L3 {
+        height: 100%;
+        margin-left: -2%;
+    }
+
+    .logo-L1, .logo-R1 {
+        margin-right: 5%;
     }
 
     .header-text {
@@ -1288,28 +1316,5 @@ footer {
     footer {
         font-size: 12px;
         padding: 12px;
-    }
-}
-
-@media screen and (max-width: 480px) {
-    .school-name {
-        font-size: 16px;
-    }
-
-    .header-logo {
-        height: 40px;
-    }
-
-    .view-title,
-    .section-title {
-        font-size: 14px;
-    }
-
-    .military-table {
-        font-size: 12px;
-    }
-
-    .modal-content {
-        margin: 5% auto;
     }
 }
