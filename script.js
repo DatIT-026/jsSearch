@@ -5,8 +5,11 @@ let departmentsData = [];
 let leadershipData = [];
 let officeData = [];
 let rankingData = [];
+let bangdiemData = [];
+let currentRankTab = 1;
 
 document.addEventListener('DOMContentLoaded', () => {
+    // tai du lieu hoc vien
     fetch('data/students_data.csv')
         .then(res => res.ok ? res.text() : Promise.reject('Không tìm thấy dữ liệu của Student'))
         .then(text => Papa.parse(text, {
@@ -15,6 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }))
         .catch(err => console.error(err));
 
+    // tai du lieu lanh dao
     fetch('data/leadership_data.csv')
         .then(res => res.ok ? res.text() : Promise.reject('Không tìm thấy dữ liệu của Ban Giám Hiệu'))
         .then(text => Papa.parse(text, {
@@ -26,6 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }))
         .catch(err => console.warn(err));
 
+    // tai du lieu co quan
     fetch('data/office_data.csv')
         .then(res => res.ok ? res.text() : Promise.reject('Không tìm thấy dữ liệu Cơ quan'))
         .then(text => Papa.parse(text, {
@@ -37,6 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }))
         .catch(err => console.warn(err));
 
+    // tai du lieu xep hang
     fetch('data/ranking_data.csv')
     .then(res => res.ok ? res.text() : Promise.reject('Không tìm thấy dữ liệu của Bảng xếp hạng'))
     .then(text => Papa.parse(text, {
@@ -49,6 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }))
     .catch(err => console.warn(err));
 
+    // tai du lieu giao vien
     fetch('data/teacher_data.csv')
         .then(res => res.ok ? res.text() : Promise.reject('Không tìm thấy teacher_data.csv'))
         .then(text => Papa.parse(text, {
@@ -60,6 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }))
         .catch(err => console.warn(err));
 
+    // tai du lieu mon hoc tinh diem
     fetch('data/courses.csv')
         .then(res => res.ok ? res.text() : Promise.reject('Không tìm thấy course.csv'))
         .then(text => Papa.parse(text, {
@@ -70,8 +78,18 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }))
         .catch(err => console.warn(err));
+
+    // tai du lieu bang diem chi tiet
+    fetch('data/bangdiem_data.csv')
+        .then(res => res.ok ? res.text() : Promise.reject('Không tìm thấy bangdiem_data.csv'))
+        .then(text => Papa.parse(text, { 
+            header: false, skipEmptyLines: true, 
+            complete: r => bangdiemData = r.data 
+        }))
+        .catch(console.warn);
 });
 
+// dieu huong va menu
 const hideAllViews = () => {
     ['home-view', 'battalion-view', 'company-list-view', 'grade-view', 'teacher-view', 'leadership-view', 'office-view', 'ranking-view'].forEach(id => {
         const el = document.getElementById(id);
@@ -351,17 +369,39 @@ const mapStaffToLeader = (row) => {
     };
 };
 
+// xu ly xep hang va tab
 const showRankingView = () => {
     closeMenu();
     hideAllViews();
     setActiveNav('nav-ranking');
     document.getElementById('ranking-view').style.display = 'block';
+    switchRankTab(currentRankTab);
+};
+
+window.switchRankTab = (year) => {
+    currentRankTab = year;
+    document.querySelectorAll('.rank-tab').forEach((btn, idx) => {
+        if ((idx + 1) === year) btn.classList.add('active');
+        else btn.classList.remove('active');
+    });
     renderRankingTable();
 };
 
 const renderRankingTable = () => {
     const tbody = document.getElementById('ranking-body');
+    const cstdEl = document.getElementById('count-cstd');
+    const csttEl = document.getElementById('count-cstt');
+    const warnEl = document.getElementById('count-warn');
+    
     tbody.innerHTML = '';
+
+    if (currentRankTab !== 1) {
+        tbody.innerHTML = '<tr><td colspan="5" class="text-center" style="padding: 30px;">Dữ liệu năm học này chưa có.</td></tr>';
+        cstdEl.innerText = '0';
+        csttEl.innerText = '0';
+        warnEl.innerText = '0';
+        return;
+    }
 
     if (rankingData.length === 0) {
         tbody.innerHTML = '<tr><td colspan="5" class="text-center">Đang tải dữ liệu...</td></tr>';
@@ -414,9 +454,13 @@ const renderRankingTable = () => {
             csttCount++;
         }
 
+        const safeStudent = encodeURIComponent(JSON.stringify(student));
+
         tr.innerHTML = `
             <td class="text-center"><span class="rank-num">${rank}</span></td>
-            <td style="font-weight: 500;">${student['Họ và tên']}</td>
+            <td class="clickable-name" onclick="showStudentTranscript('${safeStudent}')">
+                ${student['Họ và tên']}
+            </td>
             <td class="text-center" style="font-weight: bold; color:#b71c1c">${score}</td>
             <td class="text-center">${violationHtml}</td>
             <td class="text-center">${titleHtml}</td>
@@ -425,9 +469,71 @@ const renderRankingTable = () => {
         tbody.appendChild(tr);
     });
 
-    document.getElementById('count-cstd').innerText = cstdCount;
-    document.getElementById('count-cstt').innerText = csttCount;
-    document.getElementById('count-warn').innerText = warnCount;
+    cstdEl.innerText = cstdCount;
+    csttEl.innerText = csttCount;
+    warnEl.innerText = warnCount;
+};
+
+// modal bang diem
+const showStudentTranscript = (studentStr) => {
+    try {
+        const student = JSON.parse(decodeURIComponent(studentStr));
+        const modal = document.getElementById('studentModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalBody = document.getElementById('modalBody');
+
+        modalTitle.innerText = "BẢNG ĐIỂM CHI TIẾT";
+        
+        let html = `
+            <div style="text-align: center; margin-bottom: 15px; border-bottom:1px solid #eee; padding-bottom:10px">
+                <h2 style="color: #b71c1c; text-transform: uppercase;">${student['Họ và tên']}</h2>
+                <p style="margin-top:5px;">Điểm Trung Bình Năm: <span style="font-weight:bold; color:#b71c1c; font-size:18px">${student['Điểm TB']}</span></p>
+            </div>
+            <div style="max-height: 400px; overflow-y: auto;">
+                <table class="transcript-table">
+                    <thead>
+                        <tr>
+                            <th style="width:40px">STT</th>
+                            <th>Môn học</th>
+                            <th style="width:60px">TC</th>
+                            <th style="width:60px">Điểm</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+        `;
+
+        if(bangdiemData.length > 0) {
+            bangdiemData.forEach(row => {
+                const firstCol = (row[0] || '').trim();
+                
+                // kiem tra header khoa hoac stt
+                if(firstCol.toUpperCase().startsWith('KHOA') || firstCol.toUpperCase().startsWith('HK')) {
+                    html += `<tr class="transcript-header-row"><td colspan="4">${firstCol}</td></tr>`;
+                } else if (!isNaN(parseInt(firstCol))) {
+                    const stt = row[0];
+                    const name = row[1];
+                    const credits = row[3];
+                    const grade = ''; 
+
+                    html += `
+                        <tr>
+                            <td class="text-center">${stt}</td>
+                            <td>${name}</td>
+                            <td class="text-center">${credits}</td>
+                            <td class="text-center font-bold">${grade}</td>
+                        </tr>
+                    `;
+                }
+            });
+        } else {
+            html += `<tr><td colspan="4" class="text-center">Đang cập nhật danh sách môn học...</td></tr>`;
+        }
+
+        html += `</tbody></table></div>`;
+        modalBody.innerHTML = html;
+        modal.style.display = "block";
+
+    } catch(e) { console.error(e); }
 };
 
 const showTeacherView = () => {

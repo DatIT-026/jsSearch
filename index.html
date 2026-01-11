@@ -6,7 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cổng thông tin Đào tạo - Tăng Thiết Giáp</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&family=Roboto+Condensed:wght@700&family=Times+New+Roman:wght@700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&family=Roboto+Condensed:wght@700&family=Times+New+Roman:wght@700&display=swap"
+        rel="stylesheet">
 </head>
 
 <body>
@@ -16,6 +18,8 @@
             <div class="logo-box">
                 <img src="img/logo_1.webp" alt="Logo 1" class="header-logo" onerror="this.style.display='none'">
                 <img src="img/logo_2.webp" alt="Logo 2" class="header-logo" onerror="this.style.display='none'">
+                <img src="img/logo_3.webp" alt="Logo 3" class="header-logo" onerror="this.style.display='none';"
+                    style="height: 102px;">
             </div>
 
             <div class="header-text">
@@ -26,8 +30,8 @@
             </div>
 
             <div class="logo-box">
-                <img src="img/logo_3.webp" alt="Logo 3" class="header-logo" onerror="this.style.display='none'">
                 <img src="img/logo_4.webp" alt="Logo 4" class="header-logo" onerror="this.style.display='none'">
+                <img src="img/logo_5.webp" alt="Logo 5" class="header-logo" onerror="this.style.display='none'">
             </div>
         </div>
     </header>
@@ -162,7 +166,14 @@
             </div>
 
             <div class="content-box">
-                <div class="ranking-stats">
+                <div class="rank-tabs">
+                    <button class="rank-tab active" onclick="switchRankTab(1)">Năm thứ 1 (2025)</button>
+                    <button class="rank-tab" onclick="switchRankTab(2)">Năm thứ 2</button>
+                    <button class="rank-tab" onclick="switchRankTab(3)">Năm thứ 3</button>
+                    <button class="rank-tab" onclick="switchRankTab(4)">Năm thứ 4</button>
+                </div>
+
+                <div class="ranking-stats" id="ranking-stats-box">
                     <div class="stat-card gold">
                         <h3>CSTĐ</h3>
                         <span id="count-cstd">0</span>

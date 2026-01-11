@@ -36,15 +36,15 @@ body {
 }
 
 .logo-box {
-    flex: 0 0 260px; 
+    flex: 0 0 360px;
     display: flex;
     align-items: center;
-    gap: 30px; 
+    gap: 20px; 
     justify-content: center; 
 }
 
 .header-logo {
-    height: 80px; 
+    height: 90px; 
     width: auto;
     object-fit: contain;
     filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.4));
@@ -572,6 +572,68 @@ body {
     font-weight: 600;
 }
 
+/* --- Tabs chọn năm --- */
+.rank-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.rank-tab {
+    padding: 10px 20px;
+    border: 1px solid #b71c1c;
+    background: #fff;
+    color: #b71c1c;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 14px;
+    transition: all 0.3s;
+}
+
+.rank-tab.active, .rank-tab:hover {
+    background: #b71c1c;
+    color: #fff;
+}
+
+/* --- Clickable Name in Ranking --- */
+.clickable-name {
+    color: #0d47a1;
+    cursor: pointer;
+    text-decoration: underline;
+    font-weight: 600 !important;
+}
+
+.clickable-name:hover {
+    color: #b71c1c;
+}
+
+/* --- Transcript Table in Modal --- */
+.transcript-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    font-size: 13px;
+}
+
+.transcript-table th, .transcript-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+.transcript-table th {
+    background-color: #f5f5f5;
+    text-align: center;
+}
+
+.transcript-header-row {
+    background-color: #e3f2fd;
+    font-weight: bold;
+    color: #0d47a1;
+    text-transform: uppercase;
+}
 
 /* fast-ranking */
 .ranking-stats {
