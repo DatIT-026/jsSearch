@@ -261,7 +261,7 @@
     </main>
 
     <footer>
-        <p>© 2025 FireHelper Team. All Rights Reserved.</p>
+        <p>© <span id="current-year"></span> FireHelper Team. All Rights Reserved.</p>
     </footer>
 
     <div id="studentModal" class="modal">
@@ -275,6 +275,7 @@
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <script>document.getElementById("current-year").textContent = new Date().getFullYear();</script>
     <script src="script.js"></script>
 </body>
 
